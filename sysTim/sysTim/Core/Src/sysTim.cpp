@@ -4,7 +4,7 @@
 #define MAX_TASKS 10
 
 static void (*sysTim_function_task[MAX_TASKS])(void);
-static uint8_t number_of_task = 1;
+static uint8_t number_of_task = 0;
 static uint32_t sysTim_task_period[MAX_TASKS];
 static uint32_t elapsed_time[MAX_TASKS];
 static bool task_waiting[MAX_TASKS];
@@ -13,7 +13,7 @@ static bool no_task = true;
 
 
 void sysTim_add_task(void (*function_task)(void), const uint32_t period) {
-    if (period != 0 || number_of_task < MAX_TASKS) {
+    if (period != 0 && number_of_task < MAX_TASKS) {
         if (no_task) {
             no_task = false;
         }
@@ -39,7 +39,7 @@ void sysTim_check_for_events() {
 
 void HAL_SYSTICK_Callback(void) {
     for (uint8_t i = 0; i < MAX_TASKS; i++) {
-        if (elapsed_time[i] == sysTim_task_period[i]) {
+        if (elapsed_time[i] >= sysTim_task_period[i]) {
             task_waiting[i] = true;
         } else {
             elapsed_time[i]++;
