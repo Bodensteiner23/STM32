@@ -185,6 +185,7 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 0 */
 
   /* USER CODE END SysTick_IRQn 0 */
+  HAL_SYSTICK_IRQHandler();
   HAL_IncTick();
   /* USER CODE BEGIN SysTick_IRQn 1 */
 

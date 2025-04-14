@@ -1,10 +1,12 @@
 #include "sysTim.h"
 #include <stdint.h>
+#include <stdbool.h>
+#include "stm32f3xx_hal.h"
 
 #define MAX_TASKS 10
 
 static void (*sysTim_function_task[MAX_TASKS])(void);
-static uint8_t number_of_task = 0;
+static uint8_t  number_of_task = 0;
 static uint32_t sysTim_task_period[MAX_TASKS];
 static uint32_t elapsed_time[MAX_TASKS];
 static bool task_waiting[MAX_TASKS];
@@ -38,7 +40,7 @@ void sysTim_check_for_events() {
 
 
 void HAL_SYSTICK_Callback(void) {
-    for (uint8_t i = 0; i < MAX_TASKS; i++) {
+    for (uint8_t i = 0; i < number_of_task; i++) {
         if (elapsed_time[i] >= sysTim_task_period[i]) {
             task_waiting[i] = true;
         } else {
